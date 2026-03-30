@@ -2,11 +2,20 @@
 title: "Untitled"
 format: html
 editor: visual
+embed-resources: true
 ---
 
 Ctrl+Alt+I adds the code chunks
 
 ```{r}
+library(purrr)
+library(data.table)
+library(stringr)
+library(dplyr)
+library(tidyverse)
+library(lubridate)
+
+
 # List all csvs and rename
 CSVfiles <- list.files(path = "data",
                       pattern="\\.csv$", full.names=TRUE)
