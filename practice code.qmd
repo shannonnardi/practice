@@ -1,0 +1,36 @@
+---
+title: "Untitled"
+format: html
+editor: visual
+---
+
+Ctrl+Alt+I adds the code chunks
+
+```{r}
+# List all csvs and rename
+CSVfiles <- list.files(path = "data",
+                      pattern="\\.csv$", full.names=TRUE)
+print(CSVfiles)
+dataframe_names <- CSVfiles %>% str_replace_all(c(".csv" = "", "./" = ""))
+ print(dataframe_names)
+
+
+# Read CSVs into a large list and combine into one dataframe
+dat <- lapply(CSVfiles, FUN = function(x) fread(x)) %>%
+  set_names(dataframe_names)
+data <- bind_rows(dat, .id = "column_label")
+
+
+##FILTERING DATA BY JED'S CRITERIA
+a <- filter(data, Target_length_mean > 40)
+b <- filter(a, (Target_range_mean > 5 & Num_targets > 25) | Target_range_mean <5) 
+c <- filter(b, (Direction_horizontal > 140 & Direction_horizontal < 285) | 
+                   (Direction_horizontal > 5 & Direction_horizontal < 25))
+
+
+#Bin fish as up or down
+pdata <- mutate(c, updown = if_else((Direction_horizontal < 285 & Direction_horizontal > 140),
+                                   "up",
+                                   "down"))
+```
+
